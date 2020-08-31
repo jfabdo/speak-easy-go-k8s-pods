@@ -1,1 +1,1 @@
-# speakeasy-go-k8s-services
+# speak-easy-go-k8s-pods
