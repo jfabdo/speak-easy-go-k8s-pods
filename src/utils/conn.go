@@ -2,9 +2,22 @@ package utils
 
 import (
 	"context"
+	"net/http"
 
 	"github.com/go-redis/redis/v8"
 )
+
+//PostMessage is the format for committing to the redis post queue
+
+type PostMessage struct {
+	BID     string              `redis:bid`     //Browser ID
+	LID     string              `redis:lid`     //Login ID
+	SID     string              `redis:sid`     //Session ID
+	command string              `redis:command` //What this message is supposed to do, e.g. report, post comment, etc.
+	comment string              `redis:comment` //What this message is acting on, i.e. the URI
+	body    string              `redis:body`    //The comment, report, etc.
+	writer  http.ResponseWriter //Where information is being returned to
+}
 
 var ctx = context.Background()
 
