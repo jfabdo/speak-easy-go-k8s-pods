@@ -1,28 +1,32 @@
 package utils
 
 import (
-	"log"
-	"net"
+	"context"
 
-	"github.com/gomodule/redigo/redis"
+	"github.com/go-redis/redis/v8"
 )
 
-// Connection creates a connection to the local redis cluster
-func Connection() net.Conn {
+var ctx = context.Background()
 
-	conn, err := redis.Dial("tcp", "localhost:6379")
-	if err != nil {
-		log.Fatal(err)
-	}
-	return conn
+// Connection creates a connection to the local redis cluster
+func Connection() *redis.Client {
+
+	client := redis.NewClient(&redis.Options{
+		Addr:     "localhost:6379",
+		Password: "", // no password set
+		DB:       0,  // use default DB
+	})
+
+	return client
 }
 
-
-// Subscribe subscribes to the topic of your choice. 
+// Subscribe subscribes to the topic of your choice.
 // It pulls in a client automatically or one can be provided
-func Subscribe(topic string, client net.Conn = Connection()) client.Channel {
-	sub := client.Subscribe(queryResp)
-	iface, err := sub.Receive()
-	ch := sub.Channel()
-	return ch
+func Subscribe(topic string, client *redis.Client) redis.Client {
+	sub := client.Subscribe(ctx)
+	iface, err := sub.Receive(ctx)
+	if err != nil {
+		panic(err)
+	}
+	return iface.(redis.Client)
 }
