@@ -3,7 +3,7 @@ package main
 import (
 	"net/http"
 
-	"github.com/jfabdo/speak-easy-go-k8s-pods/utils"
+	"github.com/jfabdo/speak-easy-go-k8s-pods/src/utils"
 )
 
 //PostMessage is the format for committing to the redis post queue
@@ -18,5 +18,5 @@ type PostMessage struct {
 }
 
 func main() {
-	utils.Subscribe("ingress")
+	utils.Subscribe("ingress", utils.Connection())
 }
